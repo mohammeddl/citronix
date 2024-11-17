@@ -1,5 +1,7 @@
 package com.citronix.demo.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,4 +16,6 @@ public interface FieldMapper {
     FieldDTO toDTO(Field field);
 
     Field toEntity(FieldDTO fieldDTO);
+    
+    List<FieldDTO> toDTOList(List<Field> fields);
 }
