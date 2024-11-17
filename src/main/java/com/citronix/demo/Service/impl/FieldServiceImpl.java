@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.citronix.demo.Service.FieldService;
 import com.citronix.demo.dto.FieldDTO;
+import com.citronix.demo.exception.ValidationException;
 import com.citronix.demo.model.Farm;
 import com.citronix.demo.model.Field;
+import com.citronix.demo.repository.FarmRepository;
 import com.citronix.demo.repository.FieldRepository;
 
 @Service
@@ -15,7 +17,10 @@ public class FieldServiceImpl implements FieldService {
     @Autowired
     private FieldRepository fieldRepository;
 
-     public Field createField(FieldDTO fieldDTO) {
+    @Autowired
+    private FarmRepository farmRepository;
+
+    public Field createField(FieldDTO fieldDTO) {
         Farm farm = farmRepository.findById(fieldDTO.farmId())
                 .orElseThrow(() -> new IllegalArgumentException("Farm not found"));
 
@@ -25,11 +30,11 @@ public class FieldServiceImpl implements FieldService {
                 .sum();
 
         if (fieldDTO.surface() > (farm.getSurface() * 0.5)) {
-            throw new IllegalArgumentException("Field area exceeds 50% of farm area");
+            throw new ValidationException("Field area exceeds 50% of farm area");
         }
 
         if ((totalFieldArea + fieldDTO.surface()) >= farm.getSurface()) {
-            throw new IllegalArgumentException("Total field areas cannot exceed farm area");
+            throw new ValidationException("Total field areas cannot exceed farm area");
         }
 
         if (fieldRepository.countByFarmId(farm.getId()) >= 10) {
