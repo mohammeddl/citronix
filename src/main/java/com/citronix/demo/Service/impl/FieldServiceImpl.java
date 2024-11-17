@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 
 import com.citronix.demo.Service.FieldService;
 import com.citronix.demo.dto.FieldDTO;
+import com.citronix.demo.exception.CustomNotFoundException;
 import com.citronix.demo.exception.ValidationException;
+import com.citronix.demo.mapper.FieldMapper;
 import com.citronix.demo.model.Farm;
 import com.citronix.demo.model.Field;
 import com.citronix.demo.repository.FarmRepository;
@@ -20,33 +22,19 @@ public class FieldServiceImpl implements FieldService {
     @Autowired
     private FarmRepository farmRepository;
 
-    public Field createField(FieldDTO fieldDTO) {
+    public FieldDTO createField(FieldDTO fieldDTO) {
+        // Fetch the farm by ID
         Farm farm = farmRepository.findById(fieldDTO.farmId())
-                .orElseThrow(() -> new IllegalArgumentException("Farm not found"));
+                .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + fieldDTO.farmId()));
 
-        double totalFieldArea = fieldRepository.findAllByFarmId(farm.getId())
-                .stream()
-                .mapToDouble(Field::getSurface)
-                .sum();
+        // Convert DTO to entity and set the farm
+        Field field = FieldMapper.INSTANCE.toEntity(fieldDTO);
+        field.setFarm(farm);
 
-        if (fieldDTO.surface() > (farm.getSurface() * 0.5)) {
-            throw new ValidationException("Field area exceeds 50% of farm area");
-        }
+        // Save the field entity
+        Field savedField = fieldRepository.save(field);
 
-        if ((totalFieldArea + fieldDTO.surface()) >= farm.getSurface()) {
-            throw new ValidationException("Total field areas cannot exceed farm area");
-        }
-
-        if (fieldRepository.countByFarmId(farm.getId()) >= 10) {
-            throw new IllegalArgumentException("Farm cannot have more than 10 fields");
-        }
-
-        Field field = Field.builder()
-                .name(fieldDTO.name())
-                .surface(fieldDTO.surface())
-                .farm(farm)
-                .build();
-
-        return fieldRepository.save(field);
+        // Convert entity back to DTO and return
+        return FieldMapper.INSTANCE.toDTO(savedField);
     }
 }

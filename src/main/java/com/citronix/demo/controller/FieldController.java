@@ -22,7 +22,6 @@ public class FieldController {
 
     @PostMapping
     public FieldDTO createField(@RequestBody @Valid FieldDTO fieldDTO) {
-        Field field = fieldService.createField(fieldDTO);
-        return FieldMapper.INSTANCE.toDTO(field);
+        return fieldService.createField(fieldDTO);
     }
 }
