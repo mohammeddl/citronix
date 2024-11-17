@@ -1,5 +1,10 @@
 package com.citronix.demo.Service;
 
-public class FieldService {
+import com.citronix.demo.dto.FieldDTO;
+import com.citronix.demo.model.Field;
+
+public interface FieldService {
+    Field createField(FieldDTO fieldDTO);
+
     
-}
+} 
