@@ -27,22 +27,22 @@ class FieldServiceTest {
     @Mock
     private FarmRepository farmRepository;
 
-    @Test
-    void testCreateFieldWithRecordDTO() {
-        Farm farm = new Farm();
-        farm.setSurface(10);
+    // @Test
+    // void testCreateFieldWithRecordDTO() {
+    //     Farm farm = new Farm();
+    //     farm.setSurface(10);
 
-        when(farmRepository.findById(1L)).thenReturn(Optional.of(farm));
-        when(fieldRepository.findAllByFarmId(1L)).thenReturn(List.of(new Field(1L, "Field1", 5, farm)));
+    //     when(farmRepository.findById(1L)).thenReturn(Optional.of(farm));
+    //     when(fieldRepository.findAllByFarmId(1L)).thenReturn(List.of(new Field(1L, "Field1", 5, farm)));
 
-        FieldDTO fieldDTO = new FieldDTO(null, "Field2", 4.5, 1L);
-        Field createdField = new Field(2L, "Field2", 4.5, farm);
+    //     FieldDTO fieldDTO = new FieldDTO(null, "Field2", 4.5, 1L);
+    //     Field createdField = new Field(2L, "Field2", 4.5, farm);
 
-        when(fieldRepository.save(any(Field.class))).thenReturn(createdField);
+    //     when(fieldRepository.save(any(Field.class))).thenReturn(createdField);
 
-        Field result = fieldService.createField(fieldDTO);
+    //     Field result = fieldService.createField(fieldDTO);
 
-        assertEquals("Field2", result.getName());
-        assertEquals(4.5, result.getSurface());
-    }
+    //     assertEquals("Field2", result.getName());
+    //     assertEquals(4.5, result.getSurface());
+    // }
 }

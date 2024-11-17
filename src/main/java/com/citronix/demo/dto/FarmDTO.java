@@ -1,5 +1,11 @@
 package com.citronix.demo.dto;
 
-public class FarmDTO {
-    
-}
+import java.time.LocalDate;
+
+public record FarmDTO(
+    Long id,
+    String name,
+    String localization,
+    double surface,
+    LocalDate creationDate
+) {}
