@@ -1,5 +1,8 @@
 package com.citronix.demo.dto;
 
-public class FieldDTO {
-    
-}
+public record FieldDTO(
+    Long id,
+    String name,
+    double surface,
+    Long farmId
+) {}
