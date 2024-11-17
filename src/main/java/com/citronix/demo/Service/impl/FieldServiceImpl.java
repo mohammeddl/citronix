@@ -1,5 +1,7 @@
 package com.citronix.demo.Service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +25,51 @@ public class FieldServiceImpl implements FieldService {
     private FarmRepository farmRepository;
 
     public FieldDTO createField(FieldDTO fieldDTO) {
-        // Fetch the farm by ID
         Farm farm = farmRepository.findById(fieldDTO.farmId())
                 .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + fieldDTO.farmId()));
-
-        // Convert DTO to entity and set the farm
         Field field = FieldMapper.INSTANCE.toEntity(fieldDTO);
         field.setFarm(farm);
-
-        // Save the field entity
         Field savedField = fieldRepository.save(field);
-
-        // Convert entity back to DTO and return
         return FieldMapper.INSTANCE.toDTO(savedField);
+    }
+
+    public List<FieldDTO> getAllFields() {
+        List<Field> fields = fieldRepository.findAll();
+        return FieldMapper.INSTANCE.toDTOList(fields);
+    }
+
+    public FieldDTO getFieldById(Long id) {
+        Field field = fieldRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Field not found with ID: " + id));
+        return FieldMapper.INSTANCE.toDTO(field);
+    }
+
+    public FieldDTO updateField(Long id, FieldDTO fieldDTO) {
+        Field field = fieldRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Field not found with ID: " + id));
+        if (fieldDTO.farmId() != null) {
+            Farm farm = farmRepository.findById(fieldDTO.farmId())
+                    .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + fieldDTO.farmId()));
+            field.setFarm(farm);
+        }
+        field.setName(fieldDTO.name());
+        field.setSurface(fieldDTO.surface());
+        Field savedField = fieldRepository.save(field);
+        return FieldMapper.INSTANCE.toDTO(savedField);
+    }
+
+    public void deleteField(Long id) {
+        Field field = fieldRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Field not found with ID: " + id));
+        fieldRepository.delete(field);
+    }
+
+    public void validateFieldDTO(FieldDTO fieldDTO) {
+        if (fieldDTO.name() == null || fieldDTO.name().isEmpty()) {
+            throw new ValidationException("Field name is required");
+        }
+        if (fieldDTO.farmId() == null) {
+            throw new ValidationException("Farm ID is required");
+        }
     }
 }
