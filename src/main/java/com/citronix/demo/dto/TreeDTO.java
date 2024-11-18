@@ -1,5 +1,10 @@
 package com.citronix.demo.dto;
 
-public class TreeDTO {
-    
-}
+import java.time.LocalDate;
+
+public record TreeDTO(
+    Long id,
+    LocalDate plantingDate,
+    int age,
+    Long fieldId
+) {}
