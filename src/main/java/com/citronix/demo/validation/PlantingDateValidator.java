@@ -7,12 +7,12 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class PlantingDateValidator implements ConstraintValidator<ValidPlantingDate, LocalDate> {
 
-    @Override
     public boolean isValid(LocalDate plantingDate, ConstraintValidatorContext context) {
+        System.out.println("Validating plantingDate: " + plantingDate);
         if (plantingDate == null) return false;
-
+    
         int month = plantingDate.getMonthValue();
-        return month >= 3 && month <= 5; 
+        return month >= 3 && month <= 5;
     }
     
 }
