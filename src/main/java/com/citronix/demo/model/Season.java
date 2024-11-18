@@ -1,5 +1,8 @@
 package com.citronix.demo.model;
 
-public class Season {
-    
+public enum Season {
+    WINTER,
+    SPRING,
+    SUMMER,
+    AUTUMN
 }
