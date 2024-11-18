@@ -8,7 +8,7 @@ import com.citronix.demo.dto.TreeDTO;
 import com.citronix.demo.model.Tree;
 
 @Mapper(componentModel = "spring")
-public class TreeMapper {
+public interface TreeMapper {
     TreeMapper INSTANCE = Mappers.getMapper(TreeMapper.class);
 
     @Mapping(source = "field.id", target = "fieldId")
