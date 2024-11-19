@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface FieldRepository extends JpaRepository<Field, Long> {
     long countByFarmId(Long farmId);
     List<Field> findAllByFarmId(Long farmId);
+    boolean existsByFarmId(Long farmId);
 
 }
