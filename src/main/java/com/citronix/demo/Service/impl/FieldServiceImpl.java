@@ -27,6 +27,8 @@ public class FieldServiceImpl implements FieldService {
     public FieldDTO createField(FieldDTO fieldDTO) {
         Farm farm = farmRepository.findById(fieldDTO.farmId())
                 .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + fieldDTO.farmId()));
+
+        validateFieldConstraints(farm, fieldDTO);
         Field field = FieldMapper.INSTANCE.toEntity(fieldDTO);
         field.setFarm(farm);
         Field savedField = fieldRepository.save(field);
@@ -72,4 +74,21 @@ public class FieldServiceImpl implements FieldService {
             throw new ValidationException("Farm ID is required");
         }
     }
+
+    private void validateFieldConstraints(Farm farm, FieldDTO fieldDTO) {
+        if (fieldDTO.surface() < 0.1) {
+            throw new ValidationException("The field surface must be at least 0.1 hectares.");
+        }
+
+        double maxFieldSurface = farm.getSurface() * 0.5;
+        if (fieldDTO.surface() > maxFieldSurface) {
+            throw new ValidationException("The field surface cannot exceed 50% of the farm's total surface.");
+        }
+
+        long fieldCount = fieldRepository.countByFarmId(farm.getId());
+        if (fieldCount >= 10) {
+            throw new ValidationException("A farm cannot contain more than 10 fields.");
+        }
+    }
+
 }
