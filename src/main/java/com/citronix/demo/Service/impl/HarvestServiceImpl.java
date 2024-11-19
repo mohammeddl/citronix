@@ -42,12 +42,11 @@ public class HarvestServiceImpl implements HarvestService {
 
         if (harvest.getTreeHarvestDetails() != null) {
             for (TreeHarvestDetail detail : harvest.getTreeHarvestDetails()) {
-                // Fetch the actual Tree entity and validate
                 Tree tree = treeRepository.findById(detail.getTree().getId())
                         .orElseThrow(() -> new CustomNotFoundException(
                                 "Tree not found with ID: " + detail.getTree().getId()));
                 detail.setTree(tree);
-                detail.setHarvest(harvest); // Link to the parent Harvest
+                detail.setHarvest(harvest); 
             }
         }
 
