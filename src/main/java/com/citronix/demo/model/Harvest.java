@@ -36,4 +36,7 @@ public class Harvest {
 
     @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TreeHarvestDetail> treeHarvestDetails;
+
+    @OneToOne(mappedBy = "harvest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Sale sale;
 }
