@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.citronix.demo.Service.TreeService;
 import com.citronix.demo.dto.TreeDTO;
 import com.citronix.demo.exception.CustomNotFoundException;
+import com.citronix.demo.exception.ValidationException;
 import com.citronix.demo.mapper.TreeMapper;
 import com.citronix.demo.model.Field;
 import com.citronix.demo.model.Tree;
@@ -26,11 +27,22 @@ public class TreeServiceImpl implements TreeService {
         Field field = fieldRepository.findById(treeDTO.fieldId())
                 .orElseThrow(() -> new CustomNotFoundException("Field not found with ID: " + treeDTO.fieldId()));
 
+        validateTreeSpacing(field);
         Tree tree = TreeMapper.INSTANCE.toEntity(treeDTO);
         tree.setField(field);
 
         Tree savedTree = treeRepository.save(tree);
         return TreeMapper.INSTANCE.toDTO(savedTree);
+    }
+
+    private void validateTreeSpacing(Field field) {
+        int maxTrees = (int) (field.getSurface() * 100);
+
+        long currentTreeCount = treeRepository.countByFieldId(field.getId());
+
+        if (currentTreeCount >= maxTrees) {
+            throw new ValidationException("The field exceeds the maximum tree density of 100 trees per hectare.");
+        }
     }
 
     public double calculateProductivity(Long id) {
