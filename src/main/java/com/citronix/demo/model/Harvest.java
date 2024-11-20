@@ -28,7 +28,6 @@ public class Harvest {
     @NotNull(message = "Harvest date is required")
     private LocalDate date;
 
-    @Positive(message = "Harvest quantity must be positive")
     private double quantity;
 
     @ManyToOne
