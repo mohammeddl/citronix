@@ -46,4 +46,34 @@ public class SaleServiceImpl implements SaleService {
                 .toList();
     }
 
+    @Override
+    public SaleDTO updateSale(Long id, SaleDTO saleDTO) {
+        Sale existingSale = saleRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Sale not found with ID: " + id));
+
+        Harvest harvest = harvestRepository.findById(saleDTO.harvestId())
+                .orElseThrow(() -> new CustomNotFoundException("Harvest not found with ID: " + saleDTO.harvestId()));
+
+        if (!existingSale.getHarvest().getId().equals(harvest.getId())) {
+            throw new ValidationException("You cannot change the harvest for an existing sale.");
+        }
+
+        existingSale.setUnitPrice(saleDTO.unitPrice());
+        existingSale.setDate(saleDTO.date());
+        existingSale.setClient(saleDTO.client());
+
+        existingSale.setRevenue(existingSale.getQuantity() * existingSale.getUnitPrice());
+        Sale updatedSale = saleRepository.save(existingSale);
+
+        return SaleMapper.INSTANCE.toDTO(updatedSale);
+    }
+
+    public void deleteSale(Long id){
+        Sale sale = saleRepository.findById(id)
+        .orElseThrow(()->new CustomNotFoundException("Sale not found with ID: " + id));
+        saleRepository.delete(sale);
+    }
+
+
+
 }
