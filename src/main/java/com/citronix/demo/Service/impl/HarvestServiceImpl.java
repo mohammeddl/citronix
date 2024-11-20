@@ -44,18 +44,16 @@ public class HarvestServiceImpl implements HarvestService {
 
         if (harvest.getTreeHarvestDetails() != null) {
             for (TreeHarvestDetail detail : harvest.getTreeHarvestDetails()) {
-                // Fetch the tree and validate
                 Tree tree = treeRepository.findById(detail.getTree().getId())
                         .orElseThrow(() -> new CustomNotFoundException(
                                 "Tree not found with ID: " + detail.getTree().getId()));
 
-                // Calculate tree productivity
                 double treeProductivity = tree.calculateProductivity();
                 detail.setTree(tree);
                 detail.setHarvest(harvest);
-                detail.setQuantity(treeProductivity); 
+                detail.setQuantity(treeProductivity);
 
-                totalQuantity += treeProductivity; 
+                totalQuantity += treeProductivity;
             }
         }
 
