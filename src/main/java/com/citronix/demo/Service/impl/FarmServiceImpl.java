@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.citronix.demo.Service.FarmService;
 import com.citronix.demo.Service.FieldService;
 import com.citronix.demo.dto.FarmDTO;
+import com.citronix.demo.dto.FarmSearchCriteria;
 import com.citronix.demo.exception.CustomNotFoundException;
+import com.citronix.demo.mapper.FarmMapper;
 import com.citronix.demo.model.Farm;
 import com.citronix.demo.repository.FarmRepository;
 import com.citronix.demo.repository.FieldRepository;
@@ -64,6 +66,12 @@ public class FarmServiceImpl implements FarmService {
     @Transactional
     public void deleteFarm(Long id) {
         farmRepository.deleteById(id);
+    }
+
+    public List<FarmDTO> searchFarms(FarmSearchCriteria criteria) {
+        return farmRepository.searchFarm(criteria).stream()
+                .map(FarmMapper.INSTANCE::toDTO)
+                .toList();
     }
 
 }
