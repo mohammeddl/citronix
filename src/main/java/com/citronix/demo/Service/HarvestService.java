@@ -5,7 +5,9 @@ import java.util.List;
 import com.citronix.demo.dto.HarvestDTO;
 
 public interface HarvestService {
-    HarvestDTO createHarvest(HarvestDTO harvestDTO) ;
+    HarvestDTO createHarvest(HarvestDTO harvestDTO);
     List<HarvestDTO> getHarvests();
+    HarvestDTO updateHarvest(Long id, HarvestDTO harvestDTO);
+    HarvestDTO deleteHarvest(Long id);
     
 }

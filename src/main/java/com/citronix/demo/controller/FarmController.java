@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import com.citronix.demo.Service.FarmService;
 import com.citronix.demo.dto.FarmDTO;
 import com.citronix.demo.dto.FarmSearchCriteria;
-import com.citronix.demo.mapper.FarmMapper;
-import com.citronix.demo.model.Farm;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,38 +21,35 @@ public class FarmController {
     @Autowired
     private  FarmService farmService;
 
-    @PostMapping
-    public FarmDTO createFarm(@RequestBody @Valid FarmDTO farmDTO) {
-        Farm farm = farmService.createFarm(farmDTO);
-        return FarmMapper.INSTANCE.toDTO(farm);
-    }
 
+    @PostMapping
+    public ResponseEntity<FarmDTO> createFarm(@RequestBody @Valid FarmDTO farmDTO) {
+        return ResponseEntity.ok(farmService.createFarm(farmDTO));
+    }
     @GetMapping
-    public List<FarmDTO> getAllFarms() {
-        return farmService.getAllFarms().stream()
-                .map(FarmMapper.INSTANCE::toDTO)
-                .toList();
+    public ResponseEntity<List<FarmDTO>> getAllFarms() {
+        return ResponseEntity.ok(farmService.getAllFarms());
     }
 
     @GetMapping("/{id}")
-    public FarmDTO getFarmById(@PathVariable Long id) {
-        return FarmMapper.INSTANCE.toDTO(farmService.getFarmById(id));
+    public ResponseEntity<FarmDTO> getFarmById(@PathVariable Long id) {
+        return ResponseEntity.ok(farmService.getFarmById(id));
     }
 
     @PutMapping("/{id}")
-    public FarmDTO updateFarm(@PathVariable Long id, @RequestBody @Valid FarmDTO farmDTO) {
-        Farm farm = farmService.updateFarm(id, farmDTO);
-        return FarmMapper.INSTANCE.toDTO(farm);
+    public ResponseEntity<FarmDTO> updateFarm(@PathVariable Long id, @RequestBody @Valid FarmDTO farmDTO) {
+        return ResponseEntity.ok(farmService.updateFarm(id, farmDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFarm(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFarm(@PathVariable Long id) {
         farmService.deleteFarm(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/search")
     public ResponseEntity<List<FarmDTO>> searchFarms(@RequestBody FarmSearchCriteria criteria) {
-        List<FarmDTO> farms = farmService.searchFarms(criteria);
-        return ResponseEntity.ok(farms);
+        return ResponseEntity.ok(farmService.searchFarms(criteria));
     }
+
 }
