@@ -20,11 +20,12 @@ public interface HarvestMapper {
     @Mapping(source = "fieldId", target = "field.id")
     Harvest toEntity(HarvestDTO harvestDTO);
 
-    // Map TreeHarvestDetailDTO to TreeHarvestDetail
+    @Mapping(source = "tree.id", target = "treeId")
+    TreeHarvestDetailDTO toDTO(TreeHarvestDetail detail);
+
     @Mapping(target = "tree", expression = "java(mapTree(detailDTO.treeId()))")
     TreeHarvestDetail toEntity(TreeHarvestDetailDTO detailDTO);
 
-    // Helper method to map treeId to Tree
     default Tree mapTree(Long treeId) {
         if (treeId == null)
             return null;

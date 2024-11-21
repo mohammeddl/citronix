@@ -19,7 +19,6 @@ public class TreeHarvestDetail {
     @JoinColumn(name = "tree_id", nullable = false)
     private Tree tree;
 
-    @Positive(message = "Harvest quantity must be positive")
     private double quantity;
 
     @ManyToOne

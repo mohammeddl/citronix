@@ -26,32 +26,26 @@ public class FarmServiceImpl implements FarmService {
     private FieldRepository fieldRepository;
 
     @Transactional
-    public Farm createFarm(FarmDTO farmDTO) {
-        if (fieldRepository.existsByFarmId(farmDTO.id())) {
-            throw new IllegalArgumentException("A field already exists for this farm.");
-        }
-
-        Farm farm = Farm.builder()
-                .name(farmDTO.name())
-                .localization(farmDTO.localization())
-                .surface(farmDTO.surface())
-                .creationDate(farmDTO.creationDate())
-                .build();
-
-        return farmRepository.save(farm);
+    public FarmDTO createFarm(FarmDTO farmDTO) {
+        Farm farm = FarmMapper.INSTANCE.toEntity(farmDTO);
+        Farm savedFarm = farmRepository.save(farm);
+        return FarmMapper.INSTANCE.toDTO(savedFarm);
     }
 
-    public List<Farm> getAllFarms() {
-        return farmRepository.findAll();
+    public List<FarmDTO> getAllFarms() {
+        return farmRepository.findAll().stream()
+                .map(FarmMapper.INSTANCE::toDTO)
+                .toList();
     }
 
-    public Farm getFarmById(Long id) {
-        return farmRepository.findById(id)
+    public FarmDTO getFarmById(Long id) {
+        Farm farm = farmRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + id));
+        return FarmMapper.INSTANCE.toDTO(farm);
     }
 
     @Transactional
-    public Farm updateFarm(Long id, FarmDTO farmDTO) {
+    public FarmDTO updateFarm(Long id, FarmDTO farmDTO) {
         Farm farm = farmRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + id));
 
@@ -60,11 +54,15 @@ public class FarmServiceImpl implements FarmService {
         farm.setSurface(farmDTO.surface());
         farm.setCreationDate(farmDTO.creationDate());
 
-        return farmRepository.save(farm);
+        Farm updatedFarm = farmRepository.save(farm);
+        return FarmMapper.INSTANCE.toDTO(updatedFarm);
     }
 
     @Transactional
     public void deleteFarm(Long id) {
+        if (!farmRepository.existsById(id)) {
+            throw new CustomNotFoundException("Farm not found with ID: " + id);
+        }
         farmRepository.deleteById(id);
     }
 

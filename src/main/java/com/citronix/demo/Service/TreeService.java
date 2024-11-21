@@ -9,5 +9,7 @@ public interface TreeService {
     TreeDTO createTree(TreeDTO treeDTO);
     double calculateProductivity(Long treeId);
     List<TreeDTO> getAllTrees();
+    TreeDTO deleteTree(Long treeId);
+    TreeDTO updateTree(Long treeId, TreeDTO treeDTO);
     
 } 

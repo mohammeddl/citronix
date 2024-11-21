@@ -15,6 +15,8 @@ import com.citronix.demo.model.Field;
 import com.citronix.demo.repository.FarmRepository;
 import com.citronix.demo.repository.FieldRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class FieldServiceImpl implements FieldService {
 
@@ -24,6 +26,7 @@ public class FieldServiceImpl implements FieldService {
     @Autowired
     private FarmRepository farmRepository;
 
+    @Transactional
     public FieldDTO createField(FieldDTO fieldDTO) {
         Farm farm = farmRepository.findById(fieldDTO.farmId())
                 .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + fieldDTO.farmId()));
@@ -35,9 +38,11 @@ public class FieldServiceImpl implements FieldService {
         return FieldMapper.INSTANCE.toDTO(savedField);
     }
 
+    @Override
     public List<FieldDTO> getAllFields() {
-        List<Field> fields = fieldRepository.findAll();
-        return FieldMapper.INSTANCE.toDTOList(fields);
+        return fieldRepository.findAll().stream()
+                .map(FieldMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     public FieldDTO getFieldById(Long id) {
@@ -46,33 +51,30 @@ public class FieldServiceImpl implements FieldService {
         return FieldMapper.INSTANCE.toDTO(field);
     }
 
+    @Transactional
     public FieldDTO updateField(Long id, FieldDTO fieldDTO) {
         Field field = fieldRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException("Field not found with ID: " + id));
-        if (fieldDTO.farmId() != null) {
-            Farm farm = farmRepository.findById(fieldDTO.farmId())
-                    .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + fieldDTO.farmId()));
-            field.setFarm(farm);
-        }
+
+        Farm farm = farmRepository.findById(fieldDTO.farmId())
+                .orElseThrow(() -> new CustomNotFoundException("Farm not found with ID: " + fieldDTO.farmId()));
+
+        validateFieldConstraints(farm, fieldDTO);
         field.setName(fieldDTO.name());
         field.setSurface(fieldDTO.surface());
-        Field savedField = fieldRepository.save(field);
-        return FieldMapper.INSTANCE.toDTO(savedField);
+        field.setFarm(farm);
+
+        Field updatedField = fieldRepository.save(field);
+        return FieldMapper.INSTANCE.toDTO(updatedField);
     }
 
-    public void deleteField(Long id) {
+    @Transactional
+    @Override
+    public FieldDTO deleteField(Long id) {
         Field field = fieldRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException("Field not found with ID: " + id));
         fieldRepository.delete(field);
-    }
-
-    public void validateFieldDTO(FieldDTO fieldDTO) {
-        if (fieldDTO.name() == null || fieldDTO.name().isEmpty()) {
-            throw new ValidationException("Field name is required");
-        }
-        if (fieldDTO.farmId() == null) {
-            throw new ValidationException("Farm ID is required");
-        }
+        return FieldMapper.INSTANCE.toDTO(field);
     }
 
     private void validateFieldConstraints(Farm farm, FieldDTO fieldDTO) {
