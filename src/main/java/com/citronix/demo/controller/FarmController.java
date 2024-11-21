@@ -1,10 +1,12 @@
 package com.citronix.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.citronix.demo.Service.FarmService;
 import com.citronix.demo.dto.FarmDTO;
+import com.citronix.demo.dto.FarmSearchCriteria;
 import com.citronix.demo.mapper.FarmMapper;
 import com.citronix.demo.model.Farm;
 
@@ -48,5 +50,11 @@ public class FarmController {
     @DeleteMapping("/{id}")
     public void deleteFarm(@PathVariable Long id) {
         farmService.deleteFarm(id);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<FarmDTO>> searchFarms(@RequestBody FarmSearchCriteria criteria) {
+        List<FarmDTO> farms = farmService.searchFarms(criteria);
+        return ResponseEntity.ok(farms);
     }
 }
