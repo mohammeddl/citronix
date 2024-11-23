@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.citronix.demo.Service.FarmService;
-import com.citronix.demo.Service.FieldService;
 import com.citronix.demo.dto.FarmDTO;
 import com.citronix.demo.dto.FarmSearchCriteria;
 import com.citronix.demo.exception.CustomNotFoundException;
 import com.citronix.demo.mapper.FarmMapper;
 import com.citronix.demo.model.Farm;
 import com.citronix.demo.repository.FarmRepository;
-import com.citronix.demo.repository.FieldRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -22,8 +20,6 @@ public class FarmServiceImpl implements FarmService {
 
     @Autowired
     private FarmRepository farmRepository;
-    @Autowired
-    private FieldRepository fieldRepository;
 
     @Transactional
     public FarmDTO createFarm(FarmDTO farmDTO) {
