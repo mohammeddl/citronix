@@ -8,14 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.citronix.demo.Service.TreeService;
-import com.citronix.demo.dto.HarvestDTO;
 import com.citronix.demo.dto.TreeDTO;
 import com.citronix.demo.exception.CustomNotFoundException;
 import com.citronix.demo.exception.ValidationException;
-import com.citronix.demo.mapper.HarvestMapper;
 import com.citronix.demo.mapper.TreeMapper;
 import com.citronix.demo.model.Field;
-import com.citronix.demo.model.Harvest;
 import com.citronix.demo.model.Tree;
 import com.citronix.demo.repository.FieldRepository;
 import com.citronix.demo.repository.TreeRepository;

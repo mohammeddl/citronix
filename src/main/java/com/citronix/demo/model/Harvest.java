@@ -1,8 +1,5 @@
 package com.citronix.demo.model;
 
-import com.citronix.demo.model.TreeHarvestDetail;
-
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
