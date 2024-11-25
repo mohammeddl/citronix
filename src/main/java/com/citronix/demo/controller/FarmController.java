@@ -1,6 +1,9 @@
 package com.citronix.demo.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +30,8 @@ public class FarmController {
         return ResponseEntity.ok(farmService.createFarm(farmDTO));
     }
     @GetMapping
-    public ResponseEntity<List<FarmDTO>> getAllFarms() {
-        return ResponseEntity.ok(farmService.getAllFarms());
+    public ResponseEntity<Page<FarmDTO>> getAllFarms(Pageable pageable) {
+        return ResponseEntity.ok(farmService.getAllFarms(pageable));
     }
 
     @GetMapping("/{id}")

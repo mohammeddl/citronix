@@ -3,6 +3,8 @@ package com.citronix.demo.Service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.citronix.demo.Service.FarmService;
@@ -28,10 +30,10 @@ public class FarmServiceImpl implements FarmService {
         return FarmMapper.INSTANCE.toDTO(savedFarm);
     }
 
-    public List<FarmDTO> getAllFarms() {
-        return farmRepository.findAll().stream()
-                .map(FarmMapper.INSTANCE::toDTO)
-                .toList();
+    public Page<FarmDTO> getAllFarms(Pageable pageable) {
+        return farmRepository.findAll(pageable)
+                .map(FarmMapper.INSTANCE::toDTO);
+
     }
 
     public FarmDTO getFarmById(Long id) {
