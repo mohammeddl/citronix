@@ -1,16 +1,13 @@
-# Step 1: Use a lightweight OpenJDK image as the base
-FROM openjdk:21-jdk-slim
+# Stage 1: Build the application
+FROM maven:3.8.7-openjdk-17 AS builder
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Step 2: Add a label for metadata
-LABEL maintainer="daali.22.ss@gmail.com"
-
-# Step 3: Add application JAR
-ARG JAR_FILE=target/demo-0.0.1-SNAPSHOT.jar
-
-ADD ${JAR_FILE} app.jar
-
-# Step 4: Expose port 8080
+# Stage 2: Create the runtime image
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8084
-
-# Step 5: Define the command to run the application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
