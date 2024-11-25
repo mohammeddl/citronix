@@ -8,15 +8,18 @@ services:
     ports:
       - "8084:8084"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db-postgresql-nyc3-03556-do-user-18409800-0.g.db.ondigitalocean.com:25060/defaultdb?sslmode=require
-      SPRING_DATASOURCE_USERNAME: doadmin
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    depends_on:
+      - db
+
   db:
     image: postgres:15
     container_name: postgres-db
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: doadmin
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: defaultdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0074
+      POSTGRES_DB: citronix
