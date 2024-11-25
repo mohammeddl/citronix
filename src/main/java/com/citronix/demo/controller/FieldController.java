@@ -2,7 +2,6 @@ package com.citronix.demo.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.citronix.demo.Service.FieldService;
 import com.citronix.demo.dto.FieldDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/fields")
+@Tag(name = "Fields", description = "Endpoints for managing fields")
+@RequiredArgsConstructor
 public class FieldController {
 
-    @Autowired
-    private FieldService fieldService;
+    
+    private final FieldService fieldService;
 
     @PostMapping
+    @Operation(summary = "Create a new field", description = "Create a new field with the specified details")
     public ResponseEntity<FieldDTO> createField(@RequestBody @Valid FieldDTO fieldDTO) {
         FieldDTO createdField = fieldService.createField(fieldDTO);
         return ResponseEntity.ok(createdField);
