@@ -1,6 +1,5 @@
 package com.citronix.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.citronix.demo.Service.FarmService;
 import com.citronix.demo.dto.FarmDTO;
 import com.citronix.demo.dto.FarmSearchCriteria;
+import com.citronix.demo.model.Farm;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,5 +61,7 @@ public class FarmController {
     public ResponseEntity<List<FarmDTO>> searchFarms(@RequestBody FarmSearchCriteria criteria) {
         return ResponseEntity.ok(farmService.searchFarms(criteria));
     }
+
+   
 
 }

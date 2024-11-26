@@ -1,5 +1,9 @@
 package com.citronix.demo.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -25,5 +29,9 @@ public class Field {
 
     @ManyToOne
     @JoinColumn(name = "farm_id", nullable = false)
+    @JsonIgnore
     private Farm farm;
+
+    @OneToMany(mappedBy = "field")
+    private List<Harvest> harvests;
 }

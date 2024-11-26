@@ -1,7 +1,5 @@
 package com.citronix.demo.Service.impl;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,6 @@ public class TreeServiceImpl implements TreeService {
         validateTreeSpacing(field);
         Tree tree = TreeMapper.INSTANCE.toEntity(treeDTO);
         tree.setField(field);
-        tree.setAge(calculateAge(tree.getPlantingDate()));
 
         Tree savedTree = treeRepository.save(tree);
         return TreeMapper.INSTANCE.toDTO(savedTree);
@@ -49,10 +46,6 @@ public class TreeServiceImpl implements TreeService {
         if (currentTreeCount >= maxTrees) {
             throw new ValidationException("The field exceeds the maximum tree density of 100 trees per hectare.");
         }
-    }
-
-    private int calculateAge(LocalDate plantingDate) {
-        return Period.between(plantingDate, LocalDate.now()).getYears();
     }
 
     public double calculateProductivity(Long id) {
@@ -74,12 +67,10 @@ public class TreeServiceImpl implements TreeService {
 
         existingTree.setPlantingDate(treeDTO.plantingDate());
         existingTree.setField(field);
-        existingTree.setAge(calculateAge(existingTree.getPlantingDate()));
 
         Tree updatedTree = treeRepository.save(existingTree);
 
         return TreeMapper.INSTANCE.toDTO(updatedTree);
-
     }
 
     public List<TreeDTO> getAllTrees() {

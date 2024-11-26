@@ -58,7 +58,6 @@ class HarvestServiceImplTest {
 
         tree = new Tree();
         tree.setId(1L);
-        tree.setAge(5);
         tree.setField(field);
 
         harvest = new Harvest();

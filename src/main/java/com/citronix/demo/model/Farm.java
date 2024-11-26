@@ -30,6 +30,6 @@ public class Farm {
     @Column(nullable = false)
     private LocalDate creationDate;
 
-    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Field> fields;
 }

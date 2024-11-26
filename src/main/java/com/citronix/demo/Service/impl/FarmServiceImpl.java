@@ -1,6 +1,7 @@
 package com.citronix.demo.Service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,8 +17,10 @@ import com.citronix.demo.model.Farm;
 import com.citronix.demo.repository.FarmRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class FarmServiceImpl implements FarmService {
 
     @Autowired
@@ -31,9 +34,14 @@ public class FarmServiceImpl implements FarmService {
     }
 
     public Page<FarmDTO> getAllFarms(Pageable pageable) {
-        return farmRepository.findAll(pageable)
+        Page<Farm> farms = farmRepository.findAll(pageable);
+        return farms
                 .map(FarmMapper.INSTANCE::toDTO);
+    }
 
+    public Page<Farm> getAllFarms2(Pageable pageable) {
+        Page<Farm> farms = farmRepository.findAll(pageable);
+        return farms;
     }
 
     public FarmDTO getFarmById(Long id) {
@@ -70,4 +78,5 @@ public class FarmServiceImpl implements FarmService {
                 .toList();
     }
 
+    
 }
